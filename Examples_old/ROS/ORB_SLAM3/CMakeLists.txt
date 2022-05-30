@@ -84,6 +84,15 @@ rosbuild_add_executable(Stereo
 src/ros_stereo.cc
 )
 
+rosbuild_add_executable(ORBPOSE_ZED
+src/ORBpose_ZED.cc
+src/common.cc
+)
+
+target_link_libraries(ORBPOSE_ZED
+${LIBS}
+)
+
 target_link_libraries(Stereo
 ${LIBS}
 )
@@ -96,23 +105,6 @@ src/ros_rgbd.cc
 target_link_libraries(RGBD
 ${LIBS}
 )
-
-rosbuild_add_executable(ORBPOSE
-src/ORBpose.cc
-)
-
-target_link_libraries(ORBPOSE
-${LIBS}
-)
-
-rosbuild_add_executable(ORBPOSETF
-src/ORBpose_tf.cc
-)
-
-target_link_libraries(ORBPOSETF
-${LIBS}
-)
-
 
 # Node for monocular-inertial camera
 rosbuild_add_executable(Mono_Inertial
