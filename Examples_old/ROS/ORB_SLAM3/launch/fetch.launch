@@ -1,13 +1,12 @@
 <launch>
-    <node name="ORBPOSE_ZED" pkg="ORB_SLAM3" type="ORBPOSE_ZED" output="screen">
+    <node name="ORBPOSE_FETCH" pkg="ORB_SLAM3" type="ORBPOSE_FETCH" output="screen">
         <!-- for EuRoC dataset -->
-        <remap from="/camera/left/image_raw"    to="/zed_node/left/image_rect_gray"/>
-        <remap from="/camera/right/image_raw"   to="/zed_node/right/image_rect_gray"/>
+        <remap from="/camera/rgb/image_raw"                 to="/head_camera/rgb/image_raw"/>
+        <remap from="/camera/depth_registered/image_raw"    to="/head_camera/depth/image_raw"/>
 
         <!-- Parameters for original ORB-SLAM3 -->
         <param name="voc_file"      type="string"   value="$(find ORB_SLAM3)/../../../Vocabulary/ORBvoc.txt" />
-        <param name="settings_file" type="string"   value="$(find ORB_SLAM3)/../../../Examples/Stereo/ZED.yaml" />
-        <param name="do_rectify"    type="bool"     value="false" />
+        <param name="settings_file" type="string"   value="$(find ORB_SLAM3)/../../../Examples/RGB-D/fetch.yaml" />
     
         <!-- Parameters for ROS -->
         <param name="map_frame_id"  type="string"   value="world" />
