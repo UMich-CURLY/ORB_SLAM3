@@ -6,8 +6,10 @@
 
 #include"../../../include/common.h"
 
+// define the global variables max and min velocities from a yaml file
 
 ros::Publisher pose_pub;
+ros::Publisher pose_twist_pub;
 ros::Publisher map_points_pub;
 image_transport::Publisher rendered_image_pub;
 
@@ -18,17 +20,26 @@ tf::Matrix3x3 tf_orb_to_ros(1, 0, 0,
                             0, 1, 0,
                             0, 0, 1);
 
+void set_vel_bounds(double &vel, double max)
+{
+    if (vel < - max)
+        vel = max;
+    if (vel > max)
+        vel = max;
+}
 
 void setup_ros_publishers(ros::NodeHandle &node_handler, image_transport::ImageTransport &image_transport)
 {
     pose_pub = node_handler.advertise<geometry_msgs::PoseStamped> ("ZED_ORBSLAM3/camera", 1);
+
+    pose_twist_pub = node_handler.advertise<nav_msgs::Odometry> ("ZED_ORBSLAM3/pose", 1);
 
     map_points_pub = node_handler.advertise<sensor_msgs::PointCloud2>("ZED_ORBSLAM3/map_points", 1);
 
     rendered_image_pub = image_transport.advertise("ZED_ORBSLAM3/tracking_image", 1);
 }
 
-void publish_ros_pose_tf(cv::Mat Tcw, ros::Time current_frame_time, ORB_SLAM3::System::eSensor sensor_type)
+void publish_ros_pose_tf(cv::Mat Tcw, cv::Mat Tcw_prev, ros::Time previous_frame_time, ros::Time current_frame_time, ORB_SLAM3::System::eSensor sensor_type, double max_lin_vel_, double max_ang_vel_)
 {
     if (!Tcw.empty())
     {
@@ -37,6 +48,8 @@ void publish_ros_pose_tf(cv::Mat Tcw, ros::Time current_frame_time, ORB_SLAM3::S
         publish_tf_transform(tf_transform, current_frame_time);
 
         publish_pose_stamped(tf_transform, current_frame_time);
+
+        publish_odom_stamped(tf_transform, Tcw, Tcw_prev, previous_frame_time, current_frame_time, max_lin_vel_, max_ang_vel_);
     }
 }
 
@@ -57,6 +70,60 @@ void publish_pose_stamped(tf::Transform tf_transform, ros::Time current_frame_ti
 
     pose_pub.publish(pose_msg);
 }
+
+void publish_odom_stamped(tf::Transform tf_transform, cv::Mat Tcw_current, cv::Mat Tcw_previous, ros::Time previous_frame_time, ros::Time current_frame_time, double max_lin_vel_, double max_ang_vel_)
+{
+
+    cv::Mat Tcw_previous_inv, Del_Tcw_log;
+
+    cv::invert(Tcw_previous,Tcw_previous_inv,cv::DECOMP_LU);
+
+    // print tcw_previous and its inverse
+    cv::log(Tcw_current*Tcw_previous_inv,Del_Tcw_log);
+
+    // get current and previous ros time 
+    // ros::Time current_frame_time = ros::Time::now();
+
+    ros::Duration delta_t = current_frame_time - previous_frame_time;
+
+    // std::cout << "delta_t: " << delta_t.toSec() << std::endl;
+
+    cv::Mat Twist_se3 = Del_Tcw_log / delta_t.toSec();
+
+    // std::cout<<"Twist_se3: "<<Twist_se3<<std::endl;
+
+    tf::Stamped<tf::Pose> grasp_tf_pose(tf_transform, current_frame_time, map_frame_id);
+
+    geometry_msgs::PoseStamped pose_msg;
+
+    tf::poseStampedTFToMsg(grasp_tf_pose, pose_msg);
+
+    nav_msgs::Odometry odom_msg;
+
+    odom_msg.header.stamp = current_frame_time;
+    odom_msg.header.frame_id = map_frame_id;
+    odom_msg.pose.pose = pose_msg.pose;
+    
+    odom_msg.twist.twist.linear.x = Twist_se3.at<double>(0, 3);
+    odom_msg.twist.twist.linear.y = Twist_se3.at<double>(1, 3);
+    odom_msg.twist.twist.linear.z = Twist_se3.at<double>(2, 3);
+
+    odom_msg.twist.twist.angular.x = Twist_se3.at<double>(2, 1);
+    odom_msg.twist.twist.angular.y = Twist_se3.at<double>(0, 2);
+    odom_msg.twist.twist.angular.z = Twist_se3.at<double>(1, 0);
+
+    // bound every element of odom_msg using max_lin_vel_ and max_ang_vel_
+    set_vel_bounds(odom_msg.twist.twist.linear.x, max_lin_vel_);
+    set_vel_bounds(odom_msg.twist.twist.linear.y, max_lin_vel_);
+    set_vel_bounds(odom_msg.twist.twist.linear.z, max_lin_vel_);
+    set_vel_bounds(odom_msg.twist.twist.angular.x, max_ang_vel_);
+    set_vel_bounds(odom_msg.twist.twist.angular.y, max_ang_vel_);
+    set_vel_bounds(odom_msg.twist.twist.angular.z, max_ang_vel_);
+    
+    pose_twist_pub.publish(odom_msg);
+
+}
+
 
 void publish_ros_tracking_img(cv::Mat image, ros::Time current_frame_time)
 {

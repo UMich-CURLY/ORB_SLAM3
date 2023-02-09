@@ -13,6 +13,8 @@
         <param name="map_frame_id"  type="string"   value="world" />
         <param name="pose_frame_id" type="string"   value="camera" />
     </node>
+
+    <rosparam file="$(find ORB_SLAM3)/config/param.yaml" command="load" />
     
     <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="trajectory_server_orb_slam3" output="screen" ns="ZED_ORBSLAM3" >
         <param name="/target_frame_name" value="/world" />

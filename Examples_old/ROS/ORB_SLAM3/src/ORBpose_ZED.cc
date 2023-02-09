@@ -2,6 +2,9 @@
 
 using namespace std;
 
+double max_lin_vel_;
+double max_ang_vel_;
+
 class ImageGrabber
 {
 public:
@@ -26,9 +29,12 @@ int main(int argc, char **argv)
     ros::NodeHandle node_handler;
     std::string node_name = ros::this_node::getName();
 
+
     std::string voc_file, settings_file;
     node_handler.param<std::string>(node_name + "/voc_file", voc_file, "file_not_set");
     node_handler.param<std::string>(node_name + "/settings_file", settings_file, "file_not_set");
+    node_handler.param<double>(node_name + "/husky/max_lin_vel", max_lin_vel_, 1);
+    node_handler.param<double>(node_name + "/husky/max_ang_vel", max_ang_vel_, 2.5);
 
     if (voc_file == "file_not_set" || settings_file == "file_not_set")
     {
@@ -95,6 +101,8 @@ int main(int argc, char **argv)
     sync.registerCallback(boost::bind(&ImageGrabber::GrabStereo,&igb,_1,_2));
 
     pose_pub = node_handler.advertise<geometry_msgs::PoseStamped> ("/ZED_ORBSLAM3/camera", 1);
+    
+    pose_twist_pub = node_handler.advertise<nav_msgs::Odometry> ("ZED_ORBSLAM3/pose", 1); 
 
     map_points_pub = node_handler.advertise<sensor_msgs::PointCloud2>("/ZED_ORBSLAM3/map_points", 1);
 
@@ -134,23 +142,30 @@ void ImageGrabber::GrabStereo(const sensor_msgs::ImageConstPtr& msgLeft,const se
         ROS_ERROR("cv_bridge exception: %s", e.what());
         return;
     }
-
-    cv::Mat Tcw;
+    ros::Time current_frame_time;
+    ros::Time previous_frame_time;
+    cv::Mat Tcw, Tcw_prev;
     if(do_rectify)
     {
         cv::Mat imLeft, imRight;
         cv::remap(cv_ptrLeft->image,imLeft,M1l,M2l,cv::INTER_LINEAR);
         cv::remap(cv_ptrRight->image,imRight,M1r,M2r,cv::INTER_LINEAR);
+        Tcw_prev = ORB_SLAM3::Converter::toCvMat(mpSLAM->TrackStereo(imLeft,imRight,cv_ptrLeft->header.stamp.toSec()).matrix());
+        previous_frame_time = ros::Time::now();
         Tcw = ORB_SLAM3::Converter::toCvMat(mpSLAM->TrackStereo(imLeft,imRight,cv_ptrLeft->header.stamp.toSec()).matrix());
+        current_frame_time = ros::Time::now();
+        
     }
     else
     {
+        Tcw_prev = ORB_SLAM3::Converter::toCvMat(mpSLAM->TrackStereo(cv_ptrLeft->image,cv_ptrRight->image,cv_ptrLeft->header.stamp.toSec()).matrix());
+        previous_frame_time = ros::Time::now();
         Tcw = ORB_SLAM3::Converter::toCvMat(mpSLAM->TrackStereo(cv_ptrLeft->image,cv_ptrRight->image,cv_ptrLeft->header.stamp.toSec()).matrix());
+        current_frame_time = ros::Time::now();
     }
 
-    ros::Time current_frame_time = cv_ptrLeft->header.stamp;
 
-    publish_ros_pose_tf(Tcw, current_frame_time, ORB_SLAM3::System::STEREO);
+    publish_ros_pose_tf(Tcw, Tcw_prev, previous_frame_time, current_frame_time, ORB_SLAM3::System::STEREO, max_lin_vel_, max_ang_vel_);
 
     publish_ros_tracking_mappoints(mpSLAM->GetTrackedMapPoints(), current_frame_time);
 

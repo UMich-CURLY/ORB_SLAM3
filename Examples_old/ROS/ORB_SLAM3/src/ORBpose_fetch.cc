@@ -2,6 +2,9 @@
 
 using namespace std;
 
+double max_lin_vel_;
+double max_ang_vel_;
+
 class ImageGrabber
 {
 public:
@@ -37,6 +40,8 @@ int main(int argc, char **argv)
 
     node_handler.param<std::string>(node_name + "/map_frame_id", map_frame_id, "map");
     node_handler.param<std::string>(node_name + "/pose_frame_id", pose_frame_id, "pose");
+    node_handler.param<double>(node_name + "/fetch/max_lin_vel", max_lin_vel_, 1);
+    node_handler.param<double>(node_name + "/fetch/max_ang_vel", max_ang_vel_, 2.5);
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
     ORB_SLAM3::System SLAM(voc_file, settings_file, ORB_SLAM3::System::RGBD, true);
@@ -91,11 +96,12 @@ void ImageGrabber::GrabRGBD(const sensor_msgs::ImageConstPtr& msgRGB,const senso
     }
     
     // Main algorithm runs here
+    cv::Mat Tcw_prev = ORB_SLAM3::Converter::toCvMat(mpSLAM->TrackRGBD(cv_ptrRGB->image, cv_ptrD->image, cv_ptrRGB->header.stamp.toSec()).matrix());
+    ros::Time previous_frame_time = ros::Time::now();
     cv::Mat Tcw = ORB_SLAM3::Converter::toCvMat(mpSLAM->TrackRGBD(cv_ptrRGB->image, cv_ptrD->image, cv_ptrRGB->header.stamp.toSec()).matrix());
+    ros::Time current_frame_time = ros::Time::now();
 
-    ros::Time current_frame_time = cv_ptrRGB->header.stamp;
-
-    publish_ros_pose_tf(Tcw, current_frame_time, ORB_SLAM3::System::STEREO);
+    publish_ros_pose_tf(Tcw, Tcw_prev, previous_frame_time, current_frame_time, ORB_SLAM3::System::STEREO, max_lin_vel_, max_ang_vel_);
 
     publish_ros_tracking_mappoints(mpSLAM->GetTrackedMapPoints(), current_frame_time);
 
