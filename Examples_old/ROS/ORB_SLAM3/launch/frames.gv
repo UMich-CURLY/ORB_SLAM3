@@ -1,0 +1,32 @@
+digraph G {
+"torso_lift_link" -> "bellows_link2"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "torso_lift_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"base_link" -> "estop_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"odom" -> "base_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 50.200 Hz\nMost recent transform: 1660934969.175 ( 15041052.284 sec old)\nBuffer length: 4.980 sec\n"];
+"wrist_roll_link" -> "gripper_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"wrist_flex_link" -> "wrist_roll_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"head_camera_link" -> "head_camera_depth_frame"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"head_tilt_link" -> "head_camera_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"head_camera_depth_frame" -> "head_camera_depth_optical_frame"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"head_pan_link" -> "head_tilt_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"head_camera_link" -> "head_camera_rgb_frame"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"head_camera_rgb_frame" -> "head_camera_rgb_optical_frame"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "laser_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "torso_fixed_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1675976021.459 sec old)\nBuffer length: 0.000 sec\n"];
+"gripper_link" -> "l_gripper_finger_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 38.843 Hz\nMost recent transform: 1660934969.150 ( 15041052.309 sec old)\nBuffer length: 4.969 sec\n"];
+"gripper_link" -> "r_gripper_finger_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 38.843 Hz\nMost recent transform: 1660934969.150 ( 15041052.309 sec old)\nBuffer length: 4.969 sec\n"];
+"torso_lift_link" -> "bellows_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"upperarm_roll_link" -> "elbow_flex_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"shoulder_lift_link" -> "upperarm_roll_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"elbow_flex_link" -> "forearm_roll_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"torso_lift_link" -> "head_pan_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"base_link" -> "l_wheel_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"base_link" -> "r_wheel_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"shoulder_pan_link" -> "shoulder_lift_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"torso_lift_link" -> "shoulder_pan_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+"forearm_roll_link" -> "wrist_flex_link"[label="Broadcaster: /play_1675975865168072064\nAverage rate: 39.034 Hz\nMost recent transform: 1660934969.176 ( 15041052.283 sec old)\nBuffer length: 4.970 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1675976021.459"[ shape=plaintext ] ;
+ }->"odom";
+}
