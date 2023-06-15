@@ -5,8 +5,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Path1
+        - /Image_raw1
         - /TF1/Frames1
+        - /Imu3/Acceleration properties1
       Splitter Ratio: 0.5584045648574829
     Tree Height: 513
   - Class: rviz/Selection
@@ -26,7 +27,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Image_raw
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -54,7 +55,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /cam0/image_raw
+      Image Topic: /head_camera/rgb/image_raw
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -168,53 +169,44 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_link:
-          estop_link:
-            {}
-          laser_link:
-            {}
-          torso_fixed_link:
-            {}
-        bellows_link:
-          {}
-        elbow_flex_link:
-          {}
-        forearm_roll_link:
-          {}
-        head_pan_link:
-          {}
-        head_tilt_link:
-          head_camera_link:
-            head_camera_depth_frame:
-              head_camera_depth_optical_frame:
-                {}
-            head_camera_rgb_frame:
-              head_camera_rgb_optical_frame:
-                {}
-        l_gripper_finger_link:
-          {}
-        l_wheel_link:
-          {}
         odom:
-          {}
-        r_gripper_finger_link:
-          {}
-        r_wheel_link:
-          {}
-        shoulder_lift_link:
-          {}
-        shoulder_pan_link:
-          {}
-        torso_lift_link:
-          bellows_link2:
-            {}
-        upperarm_roll_link:
-          {}
-        wrist_flex_link:
-          {}
-        wrist_roll_link:
-          gripper_link:
-            {}
+          base_link:
+            estop_link:
+              {}
+            l_wheel_link:
+              {}
+            laser_link:
+              {}
+            r_wheel_link:
+              {}
+            torso_fixed_link:
+              {}
+            torso_lift_link:
+              bellows_link:
+                {}
+              bellows_link2:
+                {}
+              head_pan_link:
+                head_tilt_link:
+                  head_camera_link:
+                    head_camera_depth_frame:
+                      head_camera_depth_optical_frame:
+                        {}
+                    head_camera_rgb_frame:
+                      head_camera_rgb_optical_frame:
+                        {}
+              shoulder_pan_link:
+                shoulder_lift_link:
+                  upperarm_roll_link:
+                    elbow_flex_link:
+                      forearm_roll_link:
+                        wrist_flex_link:
+                          wrist_roll_link:
+                            gripper_link:
+                              l_gripper_finger_link:
+                                {}
+                              r_gripper_finger_link:
+                                {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -245,6 +237,98 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 0.5
+      Class: rviz_plugin_tutorials/Imu
+      Color: 204; 0; 0
+      Enabled: false
+      History Length: 1
+      Name: Imu
+      Queue Size: 10
+      Topic: /imu
+      Unreliable: false
+      Value: false
+    - Alpha: 0.5
+      Class: rviz_plugin_tutorials/Imu
+      Color: 115; 210; 22
+      Enabled: false
+      History Length: 1
+      Name: Imu
+      Queue Size: 10
+      Topic: /imu1/imu
+      Unreliable: false
+      Value: false
+    - Acceleration properties:
+        Acc. vector alpha: 0.5
+        Acc. vector color: 255; 0; 0
+        Acc. vector scale: 0.10000000149011612
+        Derotate acceleration: true
+        Enable acceleration: true
+      Axes properties:
+        Axes scale: 1
+        Enable axes: true
+      Box properties:
+        Box alpha: 1
+        Box color: 255; 0; 0
+        Enable box: true
+        x_scale: 0.30000001192092896
+        y_scale: 0.10000000149011612
+        z_scale: 0.10000000149011612
+      Class: rviz_imu_plugin/Imu
+      Enabled: true
+      Name: Imu
+      Queue Size: 10
+      Topic: /imu1/imu
+      Unreliable: false
+      Value: true
+      fixed_frame_orientation: false
+    - Acceleration properties:
+        Acc. vector alpha: 0.5
+        Acc. vector color: 115; 210; 22
+        Acc. vector scale: 0.10000000149011612
+        Derotate acceleration: true
+        Enable acceleration: true
+      Axes properties:
+        Axes scale: 1
+        Enable axes: true
+      Box properties:
+        Box alpha: 1
+        Box color: 255; 0; 0
+        Enable box: false
+        x_scale: 0.30000001192092896
+        y_scale: 0.10000000149011612
+        z_scale: 0.10000000149011612
+      Class: rviz_imu_plugin/Imu
+      Enabled: true
+      Name: Imu
+      Queue Size: 10
+      Topic: /imu
+      Unreliable: false
+      Value: true
+      fixed_frame_orientation: false
+    - Acceleration properties:
+        Acc. vector alpha: 0.5
+        Acc. vector color: 52; 101; 164
+        Acc. vector scale: 0.10000000149011612
+        Derotate acceleration: true
+        Enable acceleration: true
+      Axes properties:
+        Axes scale: 1
+        Enable axes: true
+      Box properties:
+        Box alpha: 1
+        Box color: 255; 0; 0
+        Enable box: false
+        x_scale: 0.30000001192092896
+        y_scale: 0.10000000149011612
+        z_scale: 0.10000000149011612
+      Class: rviz_imu_plugin/Imu
+      Enabled: true
+      Name: Imu
+      Queue Size: 10
+      Topic: /vectornav/IMU
+      Unreliable: false
+      Value: true
+      fixed_frame_orientation: false
   Enabled: true
   Global Options:
     Background Color: 46; 52; 54
@@ -273,7 +357,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 7.886309623718262
+      Distance: 9.73310375213623
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -281,17 +365,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 2.7547106742858887
-        Y: -2.063950300216675
-        Z: -0.2911931276321411
+        X: 0.921955943107605
+        Y: -2.067356586456299
+        Z: -0.6540393829345703
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.8947970271110535
+      Pitch: 1.5697963237762451
       Target Frame: <Fixed Frame>
-      Yaw: 3.3999974727630615
+      Yaw: 2.6050047874450684
     Saved: ~
 Window Geometry:
   Displays:
@@ -303,7 +387,7 @@ Window Geometry:
     collapsed: false
   Image_raw:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001e20000039efc020000000dfb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000002e100000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000023e000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000140049006d006100670065005f004f00520042003300000001de000000fd0000001600fffffffb000000120049006d006100670065005f00720061007701000002810000015a0000001600fffffffb0000000a0047007200610070006800000001e4000001290000000000000000fb0000000a004700720061007000680000000264000001450000000000000000fb00000014004c0069006e00650020006700720061007000680000000242000001670000000000000000000000010000010f0000034cfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0056006900650077007300000000420000034c000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000073d00000042fc0100000002fb0000000800540069006d006500000000000000073d0000041800fffffffb0000000800540069006d00650100000000000004500000000000000000000005550000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000033b0000039efc020000000dfb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000002e100000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000023e000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000140049006d006100670065005f004f00520042003300000001de000000fd0000001600fffffffb000000120049006d006100670065005f00720061007701000002810000015a0000001600fffffffb0000000a0047007200610070006800000001e4000001290000000000000000fb0000000a004700720061007000680000000264000001450000000000000000fb00000014004c0069006e00650020006700720061007000680000000242000001670000000000000000000000010000010f0000034cfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0056006900650077007300000000420000034c000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000073d00000042fc0100000002fb0000000800540069006d006500000000000000073d0000041800fffffffb0000000800540069006d00650100000000000004500000000000000000000003fc0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -313,5 +397,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1853
-  X: 288
-  Y: 293
+  X: 118
+  Y: 271

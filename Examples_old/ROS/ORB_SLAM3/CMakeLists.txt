@@ -116,6 +116,15 @@ target_link_libraries(ORBPOSE_FETCH
 ${LIBS}
 )
 
+rosbuild_add_executable(ORBPOSE_FETCH_IMU
+src/ORBpose_fetch_imu.cc
+src/common.cc
+)
+
+target_link_libraries(ORBPOSE_FETCH_IMU
+${LIBS}
+)
+
 # Node for monocular-inertial camera
 rosbuild_add_executable(Mono_Inertial
 src/ros_mono_inertial.cc

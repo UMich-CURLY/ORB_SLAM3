@@ -5,19 +5,30 @@ using namespace std;
 double max_lin_vel_;
 double max_ang_vel_;
 
+class ImuGrabber
+{
+public:
+    ImuGrabber(){};
+    void GrabImu(const sensor_msgs::ImuConstPtr &imu_msg);
+
+    queue<sensor_msgs::ImuConstPtr> imuBuf;
+    std::mutex mBufMutex;
+};
 class ImageGrabber
 {
 public:
-    ImageGrabber(ORB_SLAM3::System* pSLAM):mpSLAM(pSLAM){}
+    ImageGrabber(ORB_SLAM3::System* pSLAM, ImuGrabber *pImuGb):mpSLAM(pSLAM), mpImuGb(pImuGb){}
 
     void GrabRGBD(const sensor_msgs::ImageConstPtr& msgRGB,const sensor_msgs::ImageConstPtr& msgD);
+    void SyncWithImu();
 
     ORB_SLAM3::System* mpSLAM;
+    ImuGrabber *mpImuGb;
 };
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "RGBD");
+    ros::init(argc, argv, "RGBD-IMU");
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Info);
     if (argc > 1)
     {
@@ -44,15 +55,19 @@ int main(int argc, char **argv)
     node_handler.param<double>(node_name + "/fetch/max_ang_vel", max_ang_vel_, 2.5);
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM3::System SLAM(voc_file, settings_file, ORB_SLAM3::System::RGBD, true);
+    ORB_SLAM3::System SLAM(voc_file, settings_file, ORB_SLAM3::System::IMU_RGBD, true);
 
-    ImageGrabber igb(&SLAM);
+    ImuGrabber imugb;
+    ImageGrabber igb(&SLAM, &imugb);
 
     message_filters::Subscriber<sensor_msgs::Image> rgb_sub(node_handler, "/camera/rgb/image_raw", 100);
     message_filters::Subscriber<sensor_msgs::Image> depth_sub(node_handler, "/camera/depth_registered/image_raw", 100);
-    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::Image> sync_pol;
-    message_filters::Synchronizer<sync_pol> sync(sync_pol(10), rgb_sub, depth_sub);
-    sync.registerCallback(boost::bind(&ImageGrabber::GrabRGBD,&igb,_1,_2));
+    message_filters::Subscriber<sensor_msgs::Imu> imu_sub(node_handler, "/imu", 1000);
+
+    typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, sensor_msgs::Image, sensor_msgs::Imu> sync_pol;
+    message_filters::Synchronizer<sync_pol> sync(sync_pol(10), rgb_sub, depth_sub, imu_sub);
+
+    sync.registerCallback(boost::bind(&ImageGrabber::GrabRGBD, &igb, _1, _2));
 
     pose_pub = node_handler.advertise<geometry_msgs::PoseStamped> ("/orb_slam3_ros/camera", 1);
 
