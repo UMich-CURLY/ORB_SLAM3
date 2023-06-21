@@ -4,6 +4,7 @@ using namespace std;
 
 double max_lin_vel_;
 double max_ang_vel_;
+string traj_filename;
 
 class ImageGrabber
 {
@@ -40,6 +41,7 @@ int main(int argc, char **argv)
 
     node_handler.param<std::string>(node_name + "/map_frame_id", map_frame_id, "map");
     node_handler.param<std::string>(node_name + "/pose_frame_id", pose_frame_id, "pose");
+    node_handler.param<std::string>(node_name + "/traj_filename", traj_filename, "orb_slam3.txt");
     node_handler.param<double>(node_name + "/fetch/max_lin_vel", max_lin_vel_, 1);
     node_handler.param<double>(node_name + "/fetch/max_ang_vel", max_ang_vel_, 2.5);
 
@@ -64,6 +66,7 @@ int main(int argc, char **argv)
 
     // Stop all threads
     SLAM.Shutdown();
+    SLAM.SaveTrajectoryTUM("/home/jonathan/" + traj_filename);
 
     ros::shutdown();
 

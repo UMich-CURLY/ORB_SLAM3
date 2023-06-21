@@ -3,7 +3,8 @@
         <!-- for EuRoC dataset -->
         <remap from="/camera/rgb/image_raw"                 to="/head_camera/rgb/image_raw"/>
         <!-- <remap from="/camera/depth_registered/image_raw"    to="/head_camera/depth/image_raw"/> -->
-        <remap from="/camera/depth_registered/image_raw"    to="/head_camera/depth_downsample/image_raw"/>
+        <remap from="/camera/depth_registered/image_raw"    to="/head_camera/depth_registered/image_raw"/>
+        <!-- <remap from="/camera/depth_registered/image_raw"    to="/head_camera/depth_downsample/image_raw"/> -->
 
         <!-- Parameters for original ORB-SLAM3 -->
         <param name="voc_file"      type="string"   value="$(find ORB_SLAM3)/../../../Vocabulary/ORBvoc.txt" />
@@ -11,14 +12,15 @@
     
         <!-- Parameters for ROS -->
         <param name="map_frame_id"  type="string"   value="odom" />
-        <param name="pose_frame_id" type="string"   value="head_camera_link" />
+        <param name="pose_frame_id" type="string"   value="base_link" />
+        <param name="traj_filename" type="string"   value="orbslam3.txt" />
         <!-- <param name="map_frame_id"  type="string"   value="world" />
         <param name="pose_frame_id" type="string"   value="camera" /> -->
     </node>
     
     <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="trajectory_server_orb_slam3" output="screen" ns="ZED_ORBSLAM3" >
         <param name="/target_frame_name" value="odom" />
-        <param name="/source_frame_name" value="head_camera_link" />
+        <param name="/source_frame_name" value="base_link" />
         <!-- <param name="/target_frame_name" value="/world" />
         <param name="/source_frame_name" value="/camera" /> -->
         <param name="/trajectory_update_rate" value="20.0" />

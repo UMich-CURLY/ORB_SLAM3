@@ -8,15 +8,37 @@ File.version: "1.0"
 Camera.type: "PinHole"
 
 # Camera calibration and distortion parameters (OpenCV) 
-Camera1.fx: 613.067821
-Camera1.fy: 611.065546
-Camera1.cx: 307.302781
-Camera1.cy: 215.021469
+# Camera1.fx: 524.7531695164529
+# Camera1.fy: 523.7212572709401
+# Camera1.cx: 315.9679226092425
+# Camera1.cy: 240.239140218464
 
-Camera1.k1: -0.107082
-Camera1.k2: 0.070408
-Camera1.p1: 0.007103
-Camera1.p2: 0.002795
+# Camera1.k1: 0.0
+# Camera1.k2: 0.0
+# Camera1.p1: 0.0
+# Camera1.p2: 0.0
+# Camera1.k3: 0.0
+
+# Camera1.fx: 613.067821
+# Camera1.fy: 611.065546
+# Camera1.cx: 307.302781
+# Camera1.cy: 215.021469
+
+# Camera1.k1: -0.107082
+# Camera1.k2: 0.070408
+# Camera1.p1: 0.007103
+# Camera1.p2: 0.002795
+# Camera1.k3: 0.0
+
+Camera1.fx: 531.0635667 
+Camera1.fy: 528.78736074
+Camera1.cx: 299.52389944
+Camera1.cy: 242.03222249
+
+Camera1.k1: 0.0183181
+Camera1.k2: -0.13335825
+Camera1.p1: 0.00009415
+Camera1.p2: -0.0109667 
 Camera1.k3: 0.0
 
 Camera.width: 640
@@ -30,11 +52,35 @@ Camera.RGB: 1
 
 # Close/Far threshold. Baseline times.
 Stereo.ThDepth: 50.0
-Stereo.b: 0.07732
+# Stereo.b: 0.07732
+Stereo.b: 0.075
 
 # Depth map values factor
-RGBD.DepthMapFactor: 1000.0 # 1.0 for ROS_bag
+RGBD.DepthMapFactor: 1.0 # 1.0 for ROS_bag
 
+# Transformation from body-frame (imu) to left camera
+IMU.T_b_c1: !!opencv-matrix
+  rows: 4
+  cols: 4
+  dt: f
+  # data: [0.999903, -0.0138036, -0.00208099, -0.0202141,
+  #        0.0137985, 0.999902, -0.00243498, 0.00505961,
+  #        0.0021144, 0.00240603, 0.999995, 0.0114047,
+  #        0.0, 0.0, 0.0, 1.0]
+
+  #vectornav
+  data: [1., 0., 0., 0.163,
+         0., 1., 0., 0.03,
+         0., 0., 1., 1.136,
+         0., 0., 0., 1.]
+
+# IMU noise (Use those from VINS-mono)
+IMU.NoiseGyro: 1e-3 # 2.44e-4 #1e-3 # rad/s^0.5
+IMU.NoiseAcc: 1e-2 # 1.47e-3 #1e-2 # m/s^1.5
+IMU.GyroWalk: 1e-6 # rad/s^1.5
+IMU.AccWalk: 1e-4 # m/s^2.5
+# IMU.Frequency: 100.0 # 100 for imu and imu1,
+IMU.Frequency: 50.0 # 200 for vectornav
 #--------------------------------------------------------------------------------------------
 # ORB Parameters
 #--------------------------------------------------------------------------------------------
@@ -68,4 +114,3 @@ Viewer.ViewpointX: 0.0
 Viewer.ViewpointY: -0.7
 Viewer.ViewpointZ: -1.8
 Viewer.ViewpointF: 500.0
-
